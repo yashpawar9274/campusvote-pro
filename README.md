@@ -1,59 +1,135 @@
-# CampusVote-Pro
+# 🗳️ CampusVote-Pro
 
-CampusVote-Pro is a **modern real-time voting and election platform** built with **React**, **TypeScript**, **Supabase**, and **Tailwind CSS**. It enables authenticated users to view and participate in elections, access results, manage profiles, and — if authorised — perform admin tasks like creating and running elections.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18-blue?logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript" />
+  <img src="https://img.shields.io/badge/Vite-Fast-purple?logo=vite" />
+  <img src="https://img.shields.io/badge/TailwindCSS-Modern-38B2AC?logo=tailwind-css" />
+  <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase" />
+  <img src="https://img.shields.io/badge/Status-Production Ready-success" />
+</p>
 
----
-
-## 🚀 Live Preview
-🔗 **https://campusvote-pro.vercel.app**  
-(Visit the deployed app to explore the UI and features.)
-
----
-
-## 💡 Features
-
-### 🔐 Authentication
-- User signup + login with session management.
-- Redirects based on auth status. :contentReference[oaicite:2]{index=2}
-
-### 🌐 Pages & Routes
-| Page | Description |
-|------|-------------|
-| **Login / Auth Page** | User login or registration. :contentReference[oaicite:3]{index=3} |
-| **Dashboard** | Overview of elections and user info. :contentReference[oaicite:4]{index=4} |
-| **Elections List** | View all available elections. :contentReference[oaicite:5]{index=5} |
-| **Election Details** | Specific election with candidates and voting UI. :contentReference[oaicite:6]{index=6} |
-| **Results** | See election results and vote breakdowns. :contentReference[oaicite:7]{index=7} |
-| **Profile** | Update user profile and settings. :contentReference[oaicite:8]{index=8} |
-| **Admin Panel** | Manage elections, users, permissions. :contentReference[oaicite:9]{index=9} |
-| **AI Insights** | (Optional) Insights from AI (analytics/dashboard). :contentReference[oaicite:10]{index=10} |
-| **404 / Not Found** | Fallback for invalid URLs. :contentReference[oaicite:11]{index=11} |
+<p align="center">
+  <b>Secure Digital Campus Voting System</b><br/>
+  Real-Time • Authenticated • Scalable • Modern UI
+</p>
 
 ---
 
-## 🛠 Built With
+## 🚀 Live Demo
 
-- **React** (UI library)
-- **TypeScript** (typed JavaScript)
-- **Supabase** (auth + database + real-time)
-- **Tailwind CSS** (utility-first styling)
-- **React Router** (routing)
-- **React-Query** (API/ server state management)  
-- **Vite** (dev tooling)
+🔗 https://campusvote-pro.vercel.app  
 
 ---
 
-## 📦 Getting Started
+## 📌 Overview
 
-### Prerequisites
-Make sure you have:
-- Node.js v16+
-- npm / bun
-- Supabase project with API keys
+CampusVote-Pro is a full-stack digital voting system designed for colleges and universities.  
+It enables secure student authentication, candidate listing, real-time voting, and instant result calculation.
 
-### 🔧 Local Setup
+The platform demonstrates real-world election logic with secure backend integration using Supabase.
 
-1. **Clone the repository**
+---
+
+## 🎯 Problem Statement
+
+Traditional campus voting systems suffer from:
+
+- Manual ballot errors
+- Vote tampering risks
+- Delayed result counting
+- Lack of transparency
+- No centralized dashboard
+
+CampusVote-Pro solves these issues with a modern digital solution.
+
+---
+
+## ✨ Core Features
+
+### 🔐 Authentication System
+- Secure login/signup using Supabase Auth
+- Role-based access (Admin / Student)
+- Protected routes
+
+### 🗳 Voting System
+- One vote per user
+- Real-time vote count updates
+- Vote locking after submission
+- Duplicate prevention logic
+
+### 📊 Results Dashboard
+- Live vote counting
+- Candidate ranking
+- Percentage calculation
+- Clean UI analytics display
+
+### 🛠 Admin Controls
+- Create election
+- Add candidates
+- Start/End voting session
+- View total participation stats
+
+### 📱 UI/UX
+- Fully responsive (Mobile + Desktop)
+- Modern glassmorphism design
+- Smooth transitions
+- Accessible components
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|--------|------------|
+| Frontend | React 18 + TypeScript |
+| Styling | Tailwind CSS + shadcn-ui |
+| Backend | Supabase |
+| Database | PostgreSQL (via Supabase) |
+| Deployment | Vercel |
+| Routing | React Router |
+| State | React Hooks |
+
+---
+
+## 📂 Folder Structure
+
+campusvote-pro/
+│
+├── public/
+├── src/
+│ ├── components/
+│ ├── pages/
+│ ├── hooks/
+│ ├── services/
+│ ├── utils/
+│ └── App.tsx
+│
+├── supabase/
+├── package.json
+├── vite.config.ts
+└── README.md
+
+
+
+---
+
+## ⚙️ Installation Guide
+
+### 1️⃣ Clone Repository
+
 ```bash
 git clone https://github.com/yashpawar9274/campusvote-pro.git
+
 cd campusvote-pro
+
+
+
+npm install
+
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+
+npm run dev
+

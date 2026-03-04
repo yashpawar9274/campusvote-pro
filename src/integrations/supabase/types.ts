@@ -58,6 +58,21 @@ export type Database = {
           },
         ]
       }
+      departments: {
+        Row: {
+          department_id: number
+          department_name: string
+        }
+        Insert: {
+          department_id?: number
+          department_name: string
+        }
+        Update: {
+          department_id?: number
+          department_name?: string
+        }
+        Relationships: []
+      }
       elections: {
         Row: {
           created_at: string
@@ -102,6 +117,47 @@ export type Database = {
           year?: string | null
         }
         Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          election_id: string | null
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          election_id?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          election_id?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_election_id_fkey"
+            columns: ["election_id"]
+            isOneToOne: false
+            referencedRelation: "elections"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -154,6 +210,33 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      voters: {
+        Row: {
+          email: string
+          full_name: string
+          has_voted: boolean | null
+          password_hash: string
+          registered_at: string | null
+          voter_id: number
+        }
+        Insert: {
+          email: string
+          full_name: string
+          has_voted?: boolean | null
+          password_hash: string
+          registered_at?: string | null
+          voter_id?: number
+        }
+        Update: {
+          email?: string
+          full_name?: string
+          has_voted?: boolean | null
+          password_hash?: string
+          registered_at?: string | null
+          voter_id?: number
         }
         Relationships: []
       }

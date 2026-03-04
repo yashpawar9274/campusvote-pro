@@ -1,11 +1,12 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, BarChart3, Plus, User, Vote } from "lucide-react";
+import { Home, BarChart3, Plus, User, Vote, Bell } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/" },
   { icon: Vote, label: "Elections", path: "/elections" },
+  { icon: Bell, label: "Alerts", path: "/notifications" },
   { icon: BarChart3, label: "Results", path: "/results" },
   { icon: User, label: "Profile", path: "/profile" },
 ];

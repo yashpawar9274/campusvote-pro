@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Vote, Clock, Users, TrendingUp, Sparkles, ChevronRight, Zap } from "lucide-react";
+import { Vote, Users, TrendingUp, Sparkles, ChevronRight, Zap } from "lucide-react";
+import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
 import campusVoteLogo from "@/assets/campusvote-logo.png";
 

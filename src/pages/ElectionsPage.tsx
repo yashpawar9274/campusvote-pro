@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Vote, Clock, Search, ChevronRight } from "lucide-react";
+import { Vote, Search, ChevronRight } from "lucide-react";
+import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 

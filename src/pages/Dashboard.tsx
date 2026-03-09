@@ -12,6 +12,7 @@ interface ElectionSummary {
   title: string;
   election_type: string;
   status: string;
+  start_date: string;
   end_date: string;
   candidate_count: number;
 }

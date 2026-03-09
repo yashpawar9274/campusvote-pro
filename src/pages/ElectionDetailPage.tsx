@@ -47,6 +47,8 @@ const ElectionDetailPage = () => {
   const [votedFor, setVotedFor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => { if (id) fetchData(); }, [id]);
 

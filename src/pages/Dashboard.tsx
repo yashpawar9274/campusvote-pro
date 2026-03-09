@@ -168,9 +168,8 @@ const Dashboard = () => {
                     </div>
                     {getStatusBadge(election.status)}
                   </div>
-                  <div className="flex items-center gap-1 mt-2 text-[11px] text-muted-foreground">
-                    <Clock className="w-3 h-3" />
-                    Ends {new Date(election.end_date).toLocaleDateString()}
+                  <div className="mt-2">
+                    <CountdownTimer startDate={election.start_date} endDate={election.end_date} status={election.status} />
                   </div>
                 </motion.div>
               ))}

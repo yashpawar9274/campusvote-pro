@@ -2,9 +2,20 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles } from "lucide-react";
+import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 interface Candidate {
@@ -36,6 +47,8 @@ const ElectionDetailPage = () => {
   const [votedFor, setVotedFor] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [voting, setVoting] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => { if (id) fetchData(); }, [id]);
 
@@ -49,6 +62,16 @@ const ElectionDetailPage = () => {
     setLoading(false);
   };
 
+  const fireConfetti = () => {
+    const count = 250;
+    const defaults = { origin: { y: 0.6 }, zIndex: 9999 };
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.25), spread: 26, startVelocity: 55, colors: ["#1abc9c", "#16a085", "#3498db"] });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.2), spread: 60, colors: ["#f39c12", "#e74c3c", "#9b59b6"] });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.35), spread: 100, decay: 0.91, scalar: 0.8, colors: ["#1abc9c", "#3498db"] });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.1), spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.1), spread: 120, startVelocity: 45 });
+  };
+
   const handleVote = async () => {
     if (!selectedCandidate || !user || !id) return;
     setVoting(true);
@@ -57,11 +80,13 @@ const ElectionDetailPage = () => {
       if (error.code === "23505") toast.error("You have already voted in this election");
       else toast.error("Failed to cast vote. Please try again.");
     } else {
-      toast.success("Vote cast successfully! 🎉");
       setHasVoted(true);
       setVotedFor(selectedCandidate);
+      setShowSuccessModal(true);
+      setTimeout(fireConfetti, 200);
     }
     setVoting(false);
+    setShowConfirmDialog(false);
   };
 
   if (loading) {
@@ -165,19 +190,95 @@ const ElectionDetailPage = () => {
 
         {!hasVoted && isActive && (
           <Button
-            onClick={handleVote} disabled={!selectedCandidate || voting}
+            onClick={() => setShowConfirmDialog(true)}
+            disabled={!selectedCandidate || voting}
             className="w-full h-13 rounded-2xl gradient-primary text-white font-bold text-base shadow-xl hover:shadow-2xl transition-all mb-6 flex items-center gap-2"
           >
-            {voting ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <><Vote className="w-5 h-5" /> Cast Your Vote</>
-            )}
+            <Vote className="w-5 h-5" /> Cast Your Vote
           </Button>
         )}
       </div>
+
+      {/* Confirm Vote Dialog */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent className="rounded-3xl border-border/40 max-w-sm mx-auto">
+          <AlertDialogHeader>
+            <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-3 shadow-lg">
+              <Vote className="w-7 h-7 text-white" />
+            </div>
+            <AlertDialogTitle className="text-center text-lg font-extrabold">Confirm Your Vote</AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-sm text-muted-foreground">
+              You're voting for <span className="font-bold text-foreground">{candidates.find(c => c.id === selectedCandidate)?.name}</span>.
+              <br />This action <span className="font-bold text-destructive">cannot be undone</span>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-col">
+            <AlertDialogAction
+              onClick={handleVote}
+              disabled={voting}
+              className="w-full h-12 rounded-2xl gradient-primary text-white font-bold shadow-lg"
+            >
+              {voting ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Yes, Cast My Vote"}
+            </AlertDialogAction>
+            <AlertDialogCancel className="w-full h-12 rounded-2xl font-bold mt-0">Cancel</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm px-6"
+            onClick={() => setShowSuccessModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 24 }}
+              onClick={(e) => e.stopPropagation()}
+              className="glass-card-elevated rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.15, type: "spring", stiffness: 350, damping: 18 }}
+                className="w-20 h-20 rounded-3xl gradient-success flex items-center justify-center mx-auto mb-5 shadow-xl"
+              >
+                <Check className="w-10 h-10 text-white" strokeWidth={3} />
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+                <h2 className="text-2xl font-extrabold mb-2">Vote Cast! 🎉</h2>
+                <p className="text-muted-foreground text-sm mb-1">Your vote for</p>
+                <p className="font-extrabold text-primary text-lg mb-1">
+                  {candidates.find(c => c.id === votedFor)?.name}
+                </p>
+                <p className="text-muted-foreground text-sm mb-6">has been securely recorded.</p>
+
+                <div className="flex items-center justify-center gap-2 bg-success/10 text-success rounded-2xl px-4 py-3 mb-6 border border-success/20">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span className="text-xs font-bold">Verified & Encrypted</span>
+                </div>
+
+                <Button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="w-full h-12 rounded-2xl gradient-primary text-white font-bold shadow-lg"
+                >
+                  <Sparkles className="w-4 h-4" /> Done
+                </Button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 export default ElectionDetailPage;
+

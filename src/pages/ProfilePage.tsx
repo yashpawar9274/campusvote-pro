@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { User, Edit2, LogOut, BookOpen, GraduationCap, Hash } from "lucide-react";
+import { User, Edit2, LogOut, BookOpen, GraduationCap, Hash, Moon, Sun } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -17,6 +18,24 @@ const ProfilePage = () => {
   const [rollNumber, setRollNumber] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
+
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    if (newMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   useEffect(() => { fetchProfile(); }, []);
 
@@ -93,7 +112,21 @@ const ProfilePage = () => {
           )}
         </div>
 
-        <div className="mt-6">
+        {/* Dark Mode Toggle */}
+        <div className="mt-5 glass-card-elevated rounded-2xl px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center">
+              {isDarkMode ? <Moon className="w-4 h-4 text-primary" /> : <Sun className="w-4 h-4 text-primary" />}
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">Dark Mode</p>
+              <p className="text-[11px] text-muted-foreground">{isDarkMode ? "Dark theme active" : "Light theme active"}</p>
+            </div>
+          </div>
+          <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
+        </div>
+
+        <div className="mt-4">
           <Button onClick={signOut} variant="outline" className="w-full h-12 rounded-xl border-destructive/30 text-destructive font-bold hover:bg-destructive/5 flex items-center gap-2">
             <LogOut className="w-4 h-4" /> Sign Out
           </Button>

@@ -112,7 +112,21 @@ const ProfilePage = () => {
           )}
         </div>
 
-        <div className="mt-6">
+        {/* Dark Mode Toggle */}
+        <div className="mt-5 glass-card-elevated rounded-2xl px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-muted flex items-center justify-center">
+              {isDarkMode ? <Moon className="w-4 h-4 text-primary" /> : <Sun className="w-4 h-4 text-primary" />}
+            </div>
+            <div>
+              <p className="text-sm font-bold text-foreground">Dark Mode</p>
+              <p className="text-[11px] text-muted-foreground">{isDarkMode ? "Dark theme active" : "Light theme active"}</p>
+            </div>
+          </div>
+          <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
+        </div>
+
+        <div className="mt-4">
           <Button onClick={signOut} variant="outline" className="w-full h-12 rounded-xl border-destructive/30 text-destructive font-bold hover:bg-destructive/5 flex items-center gap-2">
             <LogOut className="w-4 h-4" /> Sign Out
           </Button>

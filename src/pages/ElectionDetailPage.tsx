@@ -62,6 +62,16 @@ const ElectionDetailPage = () => {
     setLoading(false);
   };
 
+  const fireConfetti = () => {
+    const count = 250;
+    const defaults = { origin: { y: 0.6 }, zIndex: 9999 };
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.25), spread: 26, startVelocity: 55, colors: ["#1abc9c", "#16a085", "#3498db"] });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.2), spread: 60, colors: ["#f39c12", "#e74c3c", "#9b59b6"] });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.35), spread: 100, decay: 0.91, scalar: 0.8, colors: ["#1abc9c", "#3498db"] });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.1), spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+    confetti({ ...defaults, particleCount: Math.floor(count * 0.1), spread: 120, startVelocity: 45 });
+  };
+
   const handleVote = async () => {
     if (!selectedCandidate || !user || !id) return;
     setVoting(true);
@@ -70,11 +80,13 @@ const ElectionDetailPage = () => {
       if (error.code === "23505") toast.error("You have already voted in this election");
       else toast.error("Failed to cast vote. Please try again.");
     } else {
-      toast.success("Vote cast successfully! 🎉");
       setHasVoted(true);
       setVotedFor(selectedCandidate);
+      setShowSuccessModal(true);
+      setTimeout(fireConfetti, 200);
     }
     setVoting(false);
+    setShowConfirmDialog(false);
   };
 
   if (loading) {

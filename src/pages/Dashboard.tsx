@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { Vote, Clock, Users, TrendingUp, Sparkles, ChevronRight, Zap } from "lucide-react";
+import { Vote, Users, TrendingUp, Sparkles, ChevronRight, Zap } from "lucide-react";
+import CountdownTimer from "@/components/CountdownTimer";
 import { useNavigate } from "react-router-dom";
 import campusVoteLogo from "@/assets/campusvote-logo.png";
 
@@ -11,6 +12,7 @@ interface ElectionSummary {
   title: string;
   election_type: string;
   status: string;
+  start_date: string;
   end_date: string;
   candidate_count: number;
 }
@@ -167,9 +169,8 @@ const Dashboard = () => {
                     </div>
                     {getStatusBadge(election.status)}
                   </div>
-                  <div className="flex items-center gap-1 mt-2 text-[11px] text-muted-foreground">
-                    <Clock className="w-3 h-3" />
-                    Ends {new Date(election.end_date).toLocaleDateString()}
+                  <div className="mt-2">
+                    <CountdownTimer startDate={election.start_date} endDate={election.end_date} status={election.status} />
                   </div>
                 </motion.div>
               ))}

@@ -249,7 +249,28 @@ const ElectionDetailPage = () => {
         onSelectCandidate={setSelectedCandidate}
       />
 
-      {/* Confirm Vote Dialog */}
+      {compareSelection.length === 2 && (
+        <CandidateCompareSheet
+          open={showCompare}
+          onOpenChange={(open) => {
+            setShowCompare(open);
+            if (!open) setCompareSelection([]);
+          }}
+          candidates={compareSelection as [Candidate, Candidate]}
+          electionId={election.id}
+          hasVoted={hasVoted}
+          votedFor={votedFor}
+          isActive={isActive}
+          selectedCandidate={selectedCandidate}
+          onSelectCandidate={(id) => {
+            setSelectedCandidate(id);
+            setCompareMode(false);
+            setCompareSelection([]);
+          }}
+        />
+      )}
+
+
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent className="rounded-3xl border-border/40 max-w-sm mx-auto">
           <AlertDialogHeader>

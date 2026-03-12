@@ -199,6 +199,20 @@ const ElectionDetailPage = () => {
         )}
       </div>
 
+      <CandidateBottomSheet
+        open={Boolean(detailedCandidate)}
+        onOpenChange={(open) => {
+          if (!open) setDetailedCandidate(null);
+        }}
+        candidate={detailedCandidate}
+        electionId={election.id}
+        hasVoted={hasVoted}
+        votedFor={votedFor}
+        isActive={isActive}
+        isSelected={selectedCandidate === detailedCandidate?.id}
+        onSelectCandidate={setSelectedCandidate}
+      />
+
       {/* Confirm Vote Dialog */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent className="rounded-3xl border-border/40 max-w-sm mx-auto">

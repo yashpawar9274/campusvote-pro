@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles, GitCompareArrows } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import CandidateBottomSheet from "@/components/CandidateBottomSheet";
+import CandidateCompareSheet from "@/components/CandidateCompareSheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,6 +52,9 @@ const ElectionDetailPage = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [detailedCandidate, setDetailedCandidate] = useState<Candidate | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareSelection, setCompareSelection] = useState<Candidate[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => { if (id) fetchData(); }, [id]);
 
@@ -138,14 +142,31 @@ const ElectionDetailPage = () => {
           )}
         </AnimatePresence>
 
-        <h2 className="text-base font-extrabold mb-3">
-          {hasVoted ? "Candidates" : isActive ? "Select a Candidate" : "Candidates"}
-        </h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-extrabold">
+            {compareMode ? "Select 2 to Compare" : hasVoted ? "Candidates" : isActive ? "Select a Candidate" : "Candidates"}
+          </h2>
+          {candidates.length >= 2 && (
+            <Button
+              variant={compareMode ? "default" : "outline"}
+              size="sm"
+              className="rounded-xl text-xs h-8 gap-1.5"
+              onClick={() => {
+                setCompareMode(!compareMode);
+                setCompareSelection([]);
+              }}
+            >
+              <GitCompareArrows className="w-3.5 h-3.5" />
+              {compareMode ? "Cancel" : "Compare"}
+            </Button>
+          )}
+        </div>
 
         <div className="space-y-3 mb-6">
           {candidates.map((candidate, i) => {
             const isSelected = selectedCandidate === candidate.id;
             const isVotedFor = votedFor === candidate.id;
+            const isCompareSelected = compareSelection.some((c) => c.id === candidate.id);
 
             return (
               <motion.div
@@ -153,8 +174,23 @@ const ElectionDetailPage = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: i * 0.08 }}
-                onClick={() => setDetailedCandidate(candidate)}
-                className={`glass-card-elevated rounded-2xl p-4 transition-all cursor-pointer active:scale-[0.98] ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""}`}
+                onClick={() => {
+                  if (compareMode) {
+                    setCompareSelection((prev) => {
+                      const exists = prev.find((c) => c.id === candidate.id);
+                      if (exists) return prev.filter((c) => c.id !== candidate.id);
+                      if (prev.length >= 2) return prev;
+                      const next = [...prev, candidate];
+                      if (next.length === 2) {
+                        setTimeout(() => setShowCompare(true), 100);
+                      }
+                      return next;
+                    });
+                  } else {
+                    setDetailedCandidate(candidate);
+                  }
+                }}
+                className={`glass-card-elevated rounded-2xl p-4 transition-all cursor-pointer active:scale-[0.98] ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""} ${isCompareSelected ? "ring-2 ring-accent-foreground shadow-lg" : ""}`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isVotedFor ? "gradient-success" : isSelected ? "gradient-primary" : "bg-muted"}`}>
@@ -213,7 +249,28 @@ const ElectionDetailPage = () => {
         onSelectCandidate={setSelectedCandidate}
       />
 
-      {/* Confirm Vote Dialog */}
+      {compareSelection.length === 2 && (
+        <CandidateCompareSheet
+          open={showCompare}
+          onOpenChange={(open) => {
+            setShowCompare(open);
+            if (!open) setCompareSelection([]);
+          }}
+          candidates={compareSelection as [Candidate, Candidate]}
+          electionId={election.id}
+          hasVoted={hasVoted}
+          votedFor={votedFor}
+          isActive={isActive}
+          selectedCandidate={selectedCandidate}
+          onSelectCandidate={(id) => {
+            setSelectedCandidate(id);
+            setCompareMode(false);
+            setCompareSelection([]);
+          }}
+        />
+      )}
+
+
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <AlertDialogContent className="rounded-3xl border-border/40 max-w-sm mx-auto">
           <AlertDialogHeader>

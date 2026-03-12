@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles, GitCompareArrows } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import CandidateBottomSheet from "@/components/CandidateBottomSheet";

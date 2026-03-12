@@ -7,6 +7,7 @@ import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles, GitCompareA
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import CandidateBottomSheet from "@/components/CandidateBottomSheet";
+import CandidateCompareSheet from "@/components/CandidateCompareSheet";
 import {
   AlertDialog,
   AlertDialogAction,

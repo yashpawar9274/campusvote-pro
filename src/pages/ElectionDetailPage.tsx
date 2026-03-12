@@ -52,6 +52,9 @@ const ElectionDetailPage = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [detailedCandidate, setDetailedCandidate] = useState<Candidate | null>(null);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareSelection, setCompareSelection] = useState<Candidate[]>([]);
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => { if (id) fetchData(); }, [id]);
 

@@ -173,7 +173,22 @@ const ElectionDetailPage = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: i * 0.08 }}
-                onClick={() => setDetailedCandidate(candidate)}
+                onClick={() => {
+                  if (compareMode) {
+                    setCompareSelection((prev) => {
+                      const exists = prev.find((c) => c.id === candidate.id);
+                      if (exists) return prev.filter((c) => c.id !== candidate.id);
+                      if (prev.length >= 2) return prev;
+                      const next = [...prev, candidate];
+                      if (next.length === 2) {
+                        setTimeout(() => setShowCompare(true), 100);
+                      }
+                      return next;
+                    });
+                  } else {
+                    setDetailedCandidate(candidate);
+                  }
+                }}
                 className={`glass-card-elevated rounded-2xl p-4 transition-all cursor-pointer active:scale-[0.98] ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""}`}
               >
                 <div className="flex items-center gap-3">

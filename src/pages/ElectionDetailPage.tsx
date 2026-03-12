@@ -142,9 +142,25 @@ const ElectionDetailPage = () => {
           )}
         </AnimatePresence>
 
-        <h2 className="text-base font-extrabold mb-3">
-          {hasVoted ? "Candidates" : isActive ? "Select a Candidate" : "Candidates"}
-        </h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-extrabold">
+            {compareMode ? "Select 2 to Compare" : hasVoted ? "Candidates" : isActive ? "Select a Candidate" : "Candidates"}
+          </h2>
+          {candidates.length >= 2 && (
+            <Button
+              variant={compareMode ? "default" : "outline"}
+              size="sm"
+              className="rounded-xl text-xs h-8 gap-1.5"
+              onClick={() => {
+                setCompareMode(!compareMode);
+                setCompareSelection([]);
+              }}
+            >
+              <GitCompareArrows className="w-3.5 h-3.5" />
+              {compareMode ? "Cancel" : "Compare"}
+            </Button>
+          )}
+        </div>
 
         <div className="space-y-3 mb-6">
           {candidates.map((candidate, i) => {

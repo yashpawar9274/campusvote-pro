@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, User, Clock, ShieldCheck, Vote, Sparkles } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
+import CandidateBottomSheet from "@/components/CandidateBottomSheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,6 +50,7 @@ const ElectionDetailPage = () => {
   const [voting, setVoting] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [detailedCandidate, setDetailedCandidate] = useState<Candidate | null>(null);
 
   useEffect(() => { if (id) fetchData(); }, [id]);
 
@@ -151,10 +153,8 @@ const ElectionDetailPage = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: i * 0.08 }}
-                onClick={() => { if (!hasVoted && isActive) setSelectedCandidate(candidate.id); }}
-                className={`glass-card-elevated rounded-2xl p-4 transition-all ${
-                  !hasVoted && isActive ? "cursor-pointer active:scale-[0.98]" : ""
-                } ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""}`}
+                onClick={() => setDetailedCandidate(candidate)}
+                className={`glass-card-elevated rounded-2xl p-4 transition-all cursor-pointer active:scale-[0.98] ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""}`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isVotedFor ? "gradient-success" : isSelected ? "gradient-primary" : "bg-muted"}`}>
@@ -198,6 +198,20 @@ const ElectionDetailPage = () => {
           </Button>
         )}
       </div>
+
+      <CandidateBottomSheet
+        open={Boolean(detailedCandidate)}
+        onOpenChange={(open) => {
+          if (!open) setDetailedCandidate(null);
+        }}
+        candidate={detailedCandidate}
+        electionId={election.id}
+        hasVoted={hasVoted}
+        votedFor={votedFor}
+        isActive={isActive}
+        isSelected={selectedCandidate === detailedCandidate?.id}
+        onSelectCandidate={setSelectedCandidate}
+      />
 
       {/* Confirm Vote Dialog */}
       <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>

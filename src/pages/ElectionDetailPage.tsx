@@ -166,6 +166,7 @@ const ElectionDetailPage = () => {
           {candidates.map((candidate, i) => {
             const isSelected = selectedCandidate === candidate.id;
             const isVotedFor = votedFor === candidate.id;
+            const isCompareSelected = compareSelection.some((c) => c.id === candidate.id);
 
             return (
               <motion.div
@@ -189,7 +190,7 @@ const ElectionDetailPage = () => {
                     setDetailedCandidate(candidate);
                   }
                 }}
-                className={`glass-card-elevated rounded-2xl p-4 transition-all cursor-pointer active:scale-[0.98] ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""}`}
+                className={`glass-card-elevated rounded-2xl p-4 transition-all cursor-pointer active:scale-[0.98] ${isSelected ? "ring-2 ring-primary shadow-lg shadow-primary/10" : ""} ${isVotedFor ? "ring-2 ring-success shadow-lg shadow-success/10" : ""} ${isCompareSelected ? "ring-2 ring-accent-foreground shadow-lg" : ""}`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isVotedFor ? "gradient-success" : isSelected ? "gradient-primary" : "bg-muted"}`}>
